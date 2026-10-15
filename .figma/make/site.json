@@ -1,0 +1,10 @@
+{
+  "description": "Monitor and manage AI workflows with an interactive dashboard that visualizes API activity, latency, and costs, tailored for developers and data scientists.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

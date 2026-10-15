@@ -175,16 +175,77 @@ docker run --rm -p 8000:8000 --env-file .env polyglot-edge-agent
 ```plaintext
 polyglot-edge-agent/
 ├── assets/                     # Images and diagrams
-├── backend/                    # FastAPI app
-├── extension/                  # Browser extension
+├── backend/                    # FastAPI app and tests
+│   ├── api.py                  # Main gateway
+│   ├── context_manager.py      # Context budgeting
+│   ├── database.py             # Supabase SQLAlchemy setup
+│   ├── decider_core.py         # Local model routing + guardrails
+│   ├── models.py               # ORM models
+│   ├── provision_api_key.py    # Local key provisioning
+│   └── test_*.py               # Backend tests
+├── extension/                  # Chrome browser extension
+├── src/                        # React / Vite dashboard (App.tsx)
+├── public/                     # Static assets for UI
 ├── .dockerignore
-├── .env.example                # Template only
+├── .env.example                # Template only — no real secrets
 ├── .gitignore
 ├── Dockerfile
-├── README.md
-├── render.yaml
-└── requirements.txt
+├── index.html                  # Vite entry point
+├── package.json                # Frontend dependencies
+├── render.yaml                 # Render deployment blueprint
+├── requirements.txt            # Python dependencies
+├── start.bat                   # One-command Windows startup
+├── tsconfig.json
+└── vite.config.ts              # Vite + proxy config
 ```
+
+---
+
+## 🖥️ Local Dashboard (UI)
+
+The project includes a React/Vite dashboard served on **http://localhost:8443**.
+
+**Prerequisites:** Node.js 18+ must be installed.
+
+**One-command startup (Windows):**
+
+```bat
+start.bat
+```
+
+This script:
+- Checks for the `.venv` Python environment and Node.js
+- Starts FastAPI on `http://127.0.0.1:8000`
+- Waits for the backend to be healthy
+- Starts the Vite dev server on `http://localhost:8443`
+- Prints the dashboard URL when both services are ready
+- Runs each service in its own console window
+
+**Manual startup:**
+
+```powershell
+# Terminal 1 — backend
+.\.venv\Scripts\python.exe -m uvicorn backend.api:app --host 127.0.0.1 --port 8000
+
+# Terminal 2 — frontend
+npm run dev
+```
+
+Dashboard URL: **http://localhost:8443**
+
+**Dashboard pages:**
+
+| Page | What it does |
+|---|---|
+| Overview | Project status and demo metrics |
+| AI Playground | Live chat with the real `/v1/proxy/chat` endpoint |
+| System Health | Live `/health` and `/ready` checks |
+| Settings | API endpoint and key configuration (browser local storage) |
+| Help & Documentation | Setup guide and troubleshooting |
+
+> **Security note:** The AI Playground stores the X-API-Key in browser `localStorage` for convenience in local development. This is not a secure credential store. For production use, keep API keys server-side only.
+
+**Vite proxy:** The dev server proxies `/v1`, `/health`, and `/ready` to the FastAPI backend on port 8000. No CORS configuration changes are needed for local development.
 
 ---
 

@@ -35,3 +35,7 @@ claude/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Frontend build output and dependencies
+node_modules/
+dist/
