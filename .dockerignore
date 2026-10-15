@@ -1,0 +1,17 @@
+# Local environments and secrets
+.venv/
+sd_temp/
+.env
+.env.*
+!.env.example
+
+# Git, caches, bytecode, and logs
+.git/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.log
+
+# Files not needed by the API image
+extension/
+pdf/

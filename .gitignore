@@ -1,0 +1,38 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Python & virtual environments
+.venv/
+venv/
+env/
+sd_temp/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & databases
+*.log
+*.sqlite
+*.sqlite3
+
+# AI agent & assistant directories
+.agent/
+.agents/
+.agnet/
+agent/
+.claude/
+claude/
+.aider*
+
+# IDE & OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
