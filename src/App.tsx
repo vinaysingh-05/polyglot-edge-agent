@@ -89,8 +89,9 @@ function Playground({ toast }: { toast: (s: string) => void }) {
     setErrorMsg("");
     const apiKey = localStorage.getItem("polyglot_api_key") || "";
     const t0 = Date.now();
+    const base = (localStorage.getItem("polyglot_endpoint") || "https://polyglot-edge-agent.onrender.com").replace(/\/$/, "");
     try {
-      const res = await fetch("/v1/proxy/chat", {
+      const res = await fetch(`${base}/v1/proxy/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +114,7 @@ function Playground({ toast }: { toast: (s: string) => void }) {
       setResponse({ text: data.response ?? "", latency, status: res.status });
       setState("done");
     } catch {
-      setErrorMsg("Could not reach the backend. Is the FastAPI server running on port 8000?");
+      setErrorMsg(`Could not reach the backend at ${base}. Please verify connectivity or check Settings.`);
       setState("error");
     }
   };
@@ -165,7 +166,7 @@ function ApiKeys({ toast }: { toast:(s:string)=>void }) {
 }
 
 function Settings({ toast, dark, setDark }:{toast:(s:string)=>void;dark:boolean;setDark:(v:boolean)=>void}) {
-  const [endpoint,setEndpoint]=useState(()=>localStorage.getItem("polyglot_endpoint")||"http://localhost:8000");
+  const [endpoint,setEndpoint]=useState(()=>localStorage.getItem("polyglot_endpoint")||"https://polyglot-edge-agent.onrender.com");
   const [apiKey,setApiKey]=useState(""); const [testing,setTesting]=useState(false);
   const save=()=>{localStorage.setItem("polyglot_endpoint",endpoint.replace(/\/$/,""));if(apiKey)localStorage.setItem("polyglot_api_key",apiKey);setApiKey("");toast("Local configuration saved")};
   const test=async()=>{setTesting(true);try{const r=await fetch(`${endpoint.replace(/\/$/,"")}/health`);if(!r.ok)throw new Error();toast("Connection successful — API is healthy")}catch{toast("Connection failed — check the server and endpoint")}finally{setTesting(false)}};
@@ -175,7 +176,7 @@ function Settings({ toast, dark, setDark }:{toast:(s:string)=>void;dark:boolean;
 
 function Health({ toast }:{toast:(s:string)=>void}) {
   const [checking,setChecking]=useState(false); const [health,setHealth]=useState<"unknown"|"healthy"|"error">("unknown"); const [ready,setReady]=useState<"unknown"|"healthy"|"error">("unknown");
-  const retry=async()=>{setChecking(true);const base=localStorage.getItem("polyglot_endpoint")||"http://localhost:8000";const check=async(path:string)=>{try{const r=await fetch(`${base}${path}`);return r.ok?"healthy":"error"}catch{return "error"}};const [h,r]=await Promise.all([check("/health"),check("/ready")]);setHealth(h);setReady(r);setChecking(false);toast(h==="healthy"?"Health checks completed":"Server could not be reached")};
+  const retry=async()=>{setChecking(true);const base=(localStorage.getItem("polyglot_endpoint")||"https://polyglot-edge-agent.onrender.com").replace(/\/$/,"");const check=async(path:string)=>{try{const r=await fetch(`${base}${path}`);return r.ok?"healthy":"error"}catch{return "error"}};const [h,r]=await Promise.all([check("/health"),check("/ready")]);setHealth(h);setReady(r);setChecking(false);toast(h==="healthy"?"Health checks completed":"Server could not be reached")};
   useEffect(()=>{retry()},[]);
   const tone=(s:string)=>s==="healthy"?"success":s==="error"?"danger":"warning";
   const label=(s:string,ok:string)=>s==="healthy"?ok:s==="error"?"Unavailable":"Checking";

@@ -40,9 +40,9 @@ react(),
         ],
       },
       proxy: {
-        '/health': { target: 'http://127.0.0.1:8000', changeOrigin: true },
-        '/ready':  { target: 'http://127.0.0.1:8000', changeOrigin: true },
-        '/v1':     { target: 'http://127.0.0.1:8000', changeOrigin: true },
+        '/health': { target: process.env.VITE_BACKEND_URL || 'https://polyglot-edge-agent.onrender.com', changeOrigin: true },
+        '/ready':  { target: process.env.VITE_BACKEND_URL || 'https://polyglot-edge-agent.onrender.com', changeOrigin: true },
+        '/v1':     { target: process.env.VITE_BACKEND_URL || 'https://polyglot-edge-agent.onrender.com', changeOrigin: true },
       },
     },
     preview: {

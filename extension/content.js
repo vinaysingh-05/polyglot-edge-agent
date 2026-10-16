@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const PROXY_URL = "http://127.0.0.1:8000/v1/proxy/chat";
+  const PROXY_URL = "https://polyglot-edge-agent.onrender.com/v1/proxy/chat";
   const DEFAULT_STATE = { enabled: true, requestCount: 0 };
   let settings = { ...DEFAULT_STATE };
   let badge;

@@ -25,6 +25,10 @@
   <a href="#-testing--security"><b>Testing & Security</b></a>
 </p>
 
+> 🌐 **Live Production API:** [https://polyglot-edge-agent.onrender.com](https://polyglot-edge-agent.onrender.com)  
+> 🩺 **Liveness Health Check:** [https://polyglot-edge-agent.onrender.com/health](https://polyglot-edge-agent.onrender.com/health)  
+> 📖 **Interactive Swagger Docs:** [https://polyglot-edge-agent.onrender.com/docs](https://polyglot-edge-agent.onrender.com/docs)
+
 </div>
 
 ---
@@ -242,8 +246,10 @@ The front-end is crafted with **React 19**, **Tailwind CSS v4**, and **Vite**, o
 ---
 
 ## 📚 API Reference
-
-All requests accept standard JSON payloads. Interactive Swagger documentation is available at **`http://localhost:8000/docs`**.
+ 
+All requests accept standard JSON payloads. Interactive Swagger documentation is available at:
+- **Cloud Production:** **[`https://polyglot-edge-agent.onrender.com/docs`](https://polyglot-edge-agent.onrender.com/docs)**
+- **Local Gateway:** **`http://localhost:8000/docs`**
 
 ### 1. Liveness Probe
 ```http
@@ -251,8 +257,18 @@ GET /health
 ```
 ```json
 {
-  "status": "ok"
+  "status": "ok",
+  "service": "polyglot-proxy",
+  "inference": "not_verified"
 }
+```
+
+```bash
+# Test Cloud
+curl https://polyglot-edge-agent.onrender.com/health
+
+# Test Local
+curl http://localhost:8000/health
 ```
 
 ### 2. Provider Readiness Check
@@ -261,10 +277,9 @@ GET /ready
 ```
 ```json
 {
-  "ready": true,
-  "provider": "gemini",
-  "model": "gemini-1.5-flash",
-  "checked_at": "2026-10-16T12:00:00Z"
+  "status": "ready",
+  "service": "polyglot-proxy",
+  "model": "gemini-3.8-flash"
 }
 ```
 
@@ -275,26 +290,33 @@ X-API-Key: <YOUR_API_KEY>
 Content-Type: application/json
 
 {
-  "messages": [
-    {
-      "role": "user",
-      "content": "Explain edge proxy routing in 2 sentences."
-    }
-  ]
+  "prompt": "Explain edge proxy routing in 2 sentences.",
+  "user_id": "demo_user"
 }
 ```
 
 <details>
 <summary><b>🔍 Click to view Example cURL</b></summary>
 
+**Production Cloud cURL:**
+```bash
+curl -X POST https://polyglot-edge-agent.onrender.com/v1/proxy/chat \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: YOUR_API_KEY" \
+  -d '{
+    "prompt": "Hello Polyglot!",
+    "user_id": "demo_user"
+  }'
+```
+
+**Local cURL:**
 ```bash
 curl -X POST http://localhost:8000/v1/proxy/chat \
   -H "Content-Type: application/json" \
-  -H "X-API-Key: YOUR_SECRET_KEY" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{
-    "messages": [
-      {"role": "user", "content": "Hello Polyglot!"}
-    ]
+    "prompt": "Hello Polyglot!",
+    "user_id": "demo_user"
   }'
 ```
 
@@ -306,10 +328,10 @@ curl -X POST http://localhost:8000/v1/proxy/chat \
 
 Deploy Polyglot Edge Agent on your preferred cloud infrastructure:
 
-| Platform | Tier | Guide |
+| Platform | Tier | Guide & Live URL |
 | :--- | :--- | :--- |
-| **Render** | Full Stack | Included [`render.yaml`](render.yaml) automatically configures both backend web service and static dashboard. |
-| **Vercel** | Frontend | Deploy `src/` to Vercel with build command `npm run build` and output directory `dist`. Point API calls to your hosted backend. |
+| **Render** | Full Stack (Live) | 🟢 **Live:** [`https://polyglot-edge-agent.onrender.com`](https://polyglot-edge-agent.onrender.com) — Configured via [`render.yaml`](render.yaml) |
+| **Vercel** | Frontend | Deploy `src/` to Vercel with build command `npm run build` and output directory `dist`. Point API calls to `https://polyglot-edge-agent.onrender.com`. |
 | **Docker / AWS ECS** | Backend | Containerized using the optimized [`Dockerfile`](Dockerfile) with multi-worker Uvicorn. |
 | **Fly.io** | Micro-Edge | Single command: `fly launch` followed by `fly deploy`. |
 

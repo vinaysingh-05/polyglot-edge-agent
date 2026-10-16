@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const PROXY_URL = "http://127.0.0.1:8000";
+  const PROXY_URL = "https://polyglot-edge-agent.onrender.com";
   const DEFAULT_STATE = { enabled: true, requestCount: 0 };
   const enabledToggle = document.getElementById("enabled");
   const enabledLabel = document.getElementById("enabled-label");
