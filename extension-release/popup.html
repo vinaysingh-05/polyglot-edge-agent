@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Polyglot Proxy Gate</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    body {
+      width: 292px;
+      margin: 0;
+      padding: 18px;
+      color: #e5e7eb;
+      background: #111827;
+    }
+    h1 { margin: 0 0 4px; font-size: 18px; }
+    .subtitle { margin: 0 0 18px; color: #9ca3af; font-size: 12px; }
+    .card {
+      padding: 12px;
+      margin-bottom: 10px;
+      border: 1px solid #374151;
+      border-radius: 10px;
+      background: #1f2937;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .label { color: #9ca3af; font-size: 12px; }
+    .value { margin-top: 3px; font-size: 14px; font-weight: 600; }
+    #connection { color: #fcd34d; }
+    #connection.connected { color: #86efac; }
+    .switch {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      flex: 0 0 auto;
+    }
+    .switch input { width: 0; height: 0; opacity: 0; }
+    .slider {
+      position: absolute;
+      inset: 0;
+      cursor: pointer;
+      border-radius: 24px;
+      background: #4b5563;
+      transition: .2s;
+    }
+    .slider::before {
+      position: absolute;
+      content: "";
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      bottom: 3px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s;
+    }
+    input:checked + .slider { background: #2563eb; }
+    input:checked + .slider::before { transform: translateX(18px); }
+    .hint { margin: 14px 0 0; color: #9ca3af; font-size: 11px; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <h1>Polyglot Proxy Gate</h1>
+  <p class="subtitle">Local safety and routing for browser prompts</p>
+
+  <div class="card">
+    <div class="label">Proxy connection</div>
+    <div id="connection" class="value">Checking…</div>
+  </div>
+
+  <div class="card row">
+    <div>
+      <div class="label">Interception</div>
+      <div id="enabled-label" class="value">Enabled</div>
+    </div>
+    <label class="switch" aria-label="Enable prompt interception">
+      <input id="enabled" type="checkbox">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="card">
+    <div class="label">Requests intercepted</div>
+    <div id="request-count" class="value">0</div>
+  </div>
+
+  <p class="hint">Press Enter in a text field to send a prompt through the local proxy. Shift+Enter keeps the prompt local.</p>
+  <script src="popup.js"></script>
+</body>
+</html>
