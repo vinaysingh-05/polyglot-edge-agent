@@ -32,9 +32,6 @@ try:
     from .database import get_optional_db
     from .decider_core import PolyglotCore
     from .models import ApiKey
-
-class LoginRequest(BaseModel):
-    api_key: str = Field(..., min_length=1)
 except ImportError:  # Supports running from the backend directory.
     from context_manager import ContextItem, ContextManager
     from database import get_optional_db
@@ -104,6 +101,10 @@ _provider_verification: dict[str, Any] = {
     "message": "Inference has not been verified.",
     "checked_at": 0.0,
 }
+
+
+class LoginRequest(BaseModel):
+    api_key: str = Field(..., min_length=1)
 
 
 class ChatRequest(BaseModel):
@@ -261,12 +262,6 @@ def _provider_readiness() -> dict[str, Any]:
 async def health() -> dict[str, str]:
     """Report API process availability without claiming inference readiness."""
     return {"status": "ok", "service": "polyglot-proxy", "inference": "not_verified"}
-
-
-@app.get("/ready")
-async def readiness() -> JSONResponse:
-    # existing implementation unchanged (will be kept below)
-    ...
 
 
 @app.post("/login")
