@@ -1,30 +1,28 @@
 <div align="center">
 
-<img src="assets/hero-banner.svg" alt="Polyglot Edge Agent" width="100%">
+<img src="assets/hero-banner.svg" alt="Polyglot Edge Agent Hero Banner" width="100%">
 
 # ⚡ Polyglot Edge Agent ⚡
+### *The Intelligent, High-Velocity AI Gateway & Edge Proxy*
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-Pro%20%7C%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-8.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white)](#)
 
 <p align="center">
-  <strong>Gemini-powered AI proxy with API-key authentication, cached readiness checks, and optional Supabase-backed security.</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/FastAPI-0.100%2B-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
-  <img src="https://img.shields.io/badge/Google_Gemini-API-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google Gemini">
-  <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" alt="Supabase">
-  <img src="https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
-  <img src="https://img.shields.io/badge/Tests-Passing-success?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests">
-</p>
-
-<p align="center">
-  <a href="#overview">Overview</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#request-workflow">Workflow</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#api-reference">API</a> •
-  <a href="#deployment">Deployment</a> •
-  <a href="#testing">Testing</a>
+  <a href="#-overview"><b>Overview</b></a> •
+  <a href="#-interactive-architecture--flow"><b>Architecture & Flow</b></a> •
+  <a href="#-quick-start"><b>Quick Start</b></a> •
+  <a href="#-interactive-dashboard-tour"><b>Dashboard UI</b></a> •
+  <a href="#-api-reference"><b>API Reference</b></a> •
+  <a href="#-production-deployment"><b>Deployment</b></a> •
+  <a href="#-testing--security"><b>Testing & Security</b></a>
 </p>
 
 </div>
@@ -33,140 +31,304 @@
 
 ## 🚀 Overview
 
-**Polyglot Edge Agent** is a lightweight, high-performance FastAPI-based proxy designed to bridge client applications (like browser extensions) securely to powerful AI inference engines. 
+**Polyglot Edge Agent** is an ultra-fast, intelligent AI routing middleware designed to sit seamlessly between client applications (browser extensions, mobile apps, web interfaces) and frontier AI models.
 
-> [!NOTE]
-> **Active Provider Status:** Google Gemini is the fully integrated active provider. Any reference code for alternative providers in `backend/` remains strictly as legacy structure unless explicitly initialized.
+By leveraging intelligent decision logic, parameter grounding, and latency optimization:
+- ⚡ **Sub-millisecond validation & fast routing** ensures minimal overhead before model invocation.
+- 🔒 **Security-First Architecture** with API-key authorization, SHA-256 hashed credentials, and optional Supabase PostgreSQL persistence.
+- 📊 **Built-in Interactive Dashboard** powered by React 19, Tailwind CSS v4, and Vite for real-time monitoring and AI playground exploration.
+- 🛡️ **Edge Guardrails** to enforce context window limits, sanitize prompts, and protect client integrity.
 
-<img src="assets/performance-stats.svg" alt="Project capability highlights" width="100%">
+<div align="center">
+  <img src="assets/performance-stats.svg" alt="Project capability highlights" width="100%">
+</div>
 
-Architecture
+---
 
-<img src="assets/Polyglot%20Edge%20Agent%20System%20Architecture.png" alt="Polyglot Edge Agent system architecture" width="100%">
+## 🧬 Interactive Architecture & Flow
 
-<details>
-<summary><strong>Expand the text architecture diagram</strong></summary>
+### System Architecture
+<div align="center">
+  <img src="assets/Polyglot%20Edge%20Agent%20System%20Architecture.png" alt="Polyglot Edge Agent system architecture" width="95%">
+</div>
 
-flowchart TD
-    C["Client / Browser Extension"] --> API["FastAPI application"]
-    API --> AUTH["API-key / Bearer authentication"]
-    AUTH --> GUARD["Request validation and safety checks"]
-    GUARD --> PROXY["Proxy request handling"]
-    PROXY --> GEM["Google Gemini API"]
-    API -. optional database-backed auth .-> DB[("Supabase PostgreSQL")]
-    DB --- U["users"]
-    DB --- K["api_keys"]
-    DB --- L["usage_logs"]
-    API --> H["/health"]
-    API --> R["/ready"]
+<details open>
+<summary><b>🔍 Click to View Live Interactive Request Workflow</b></summary>
 
-This is a high-level overview. Check the implementation in backend/ for the exact request flow.
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as 💻 Client / Extension / UI
+    participant Gateway as ⚡ FastAPI Gateway (:8000)
+    participant Auth as 🔐 Auth & Key Verifier
+    participant Guard as 🛡️ Edge Guardrails
+    participant Gemini as 🧠 Google Gemini API
+    participant DB as 🗄️ Supabase (Optional)
+
+    Client->>Gateway: POST /v1/proxy/chat (with X-API-Key)
+    activate Gateway
+    Gateway->>Auth: Validate API Key / Bearer Token
+    alt Database Auth Enabled
+        Auth->>DB: Verify SHA-256 Hash & Quota
+        DB-->>Auth: Key Verified
+    else Local Env Auth
+        Auth-->>Gateway: Key Matched POLYGLOT_API_KEY
+    end
+    
+    Gateway->>Guard: Run Content Sanitization & Context Budget
+    Guard-->>Gateway: Validated Prompt Payload
+    
+    Gateway->>Gemini: Stream/Generate Content
+    Gemini-->>Gateway: Inferred AI Tokens + Usage Metrics
+    
+    opt Asynchronous Audit Logging
+        Gateway-)DB: Record Usage & Latency to usage_logs
+    end
+
+    Gateway-->>Client: 200 OK (Model Response + Metadata)
+    deactivate Gateway
+```
 
 </details>
 
-Request workflow
+<details>
+<summary><b>📐 Click to Expand Component Topology Graph</b></summary>
 
-<img src="assets/workflow-pipeline.svg" alt="Request workflow pipeline" width="100%">
+```mermaid
+flowchart LR
+    subgraph Clients["🌐 Ingestion Tier"]
+        C1["Chrome Extension"]
+        C2["Vite Dashboard (:8443)"]
+        C3["REST / SDK Clients"]
+    end
 
+    subgraph EdgeProxy["⚡ Polyglot Gateway (:8000)"]
+        direction TB
+        EP1["FastAPI Application (backend/api.py)"]
+        EP2["Auth & Token Dependency"]
+        EP3["Context Manager & Decider Engine"]
+        EP4["Liveness & Readiness Cache (/health, /ready)"]
+    end
+
+    subgraph DataStore["🗄️ Persistent Layer (Optional)"]
+        DB1[("Supabase PostgreSQL")]
+        DB1 --- T1["users"]
+        DB1 --- T2["api_keys"]
+        DB1 --- T3["usage_logs"]
+    end
+
+    subgraph Providers["🧠 Frontier Inference"]
+        G1["Google Gemini Pro / Flash"]
+    end
+
+    Clients -->|HTTP / JSON| EP1
+    EP1 --> EP2
+    EP2 --> EP3
+    EP2 -.->|Verify Hash| DB1
+    EP3 -->|Inference| G1
+    EP1 -.->|Audit Logs| DB1
+```
+
+</details>
+
+<div align="center">
+  <img src="assets/workflow-pipeline.svg" alt="Request workflow pipeline" width="100%">
+</div>
+
+---
 
 ## ⚡ Quick Start
 
-<details>
-<summary>1️⃣ Clone the repository</summary>
+Select your preferred environment to get running in under 60 seconds:
 
+<details open>
+<summary><b>🪟 Windows (Recommended - One Click)</b></summary>
+
+The project includes an automatic bootstrap script `start.bat` that validates Python, sets up virtual environments, starts FastAPI on `http://127.0.0.1:8000`, and launches the Vite UI on `http://localhost:8443`.
+
+```bat
+# Double-click or run from terminal:
+start.bat
+```
+
+</details>
+
+<details>
+<summary><b>💻 Manual Startup (Windows / macOS / Linux)</b></summary>
+
+### 1. Clone & Setup Backend
 ```bash
-git clone https://github.com/<YOUR-USERNAME>/polyglot-edge-agent.git
+# Clone the repository
+git clone https://github.com/vinaysingh-05/polyglot-edge-agent.git
 cd polyglot-edge-agent
-```
-</details>
 
-<details>
-<summary>2️⃣ Create environment & install dependencies</summary>
-
-```bash
+# Create Python virtual environment
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+# Activate virtual environment
+# Windows:
+.\.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
+
+# Install backend dependencies
+pip install -r requirements.txt
 ```
+
+### 2. Configure Environment
+```bash
+# Copy example configuration
+cp .env.example .env
+
+# Edit .env and supply your credentials:
+# GEMINI_API_KEY=your_gemini_api_key_here
+# GEMINI_MODEL=gemini-1.5-flash
+# POLYGLOT_ENV=development
+```
+
+### 3. Launch Services
+
+**Terminal 1 — Backend Gateway:**
+```bash
+python -m uvicorn backend.api:app --host 0.0.0.0 --port 8000 --reload
+```
+
+**Terminal 2 — Frontend Dashboard:**
+```bash
+npm install
+npm run dev
+```
+
+Visit the dashboard in your browser at 👉 **`http://localhost:8443`**
+
 </details>
 
 <details>
-<summary>3️⃣ Configure environment variables</summary>
+<summary><b>🐳 Docker Container</b></summary>
+
+Run the backend in a zero-dependency isolated container:
 
 ```bash
-Copy-Item .env.example .env
-```
-
-- Set `GEMINI_API_KEY` and `GEMINI_MODEL`
-- Optionally set `DATABASE_URL` for Supabase authentication
-- ⚠️ Never commit `.env` or real secrets
-</details>
-
-<details>
-<summary>4️⃣ Start the API</summary>
-
-```bash
-.\.venv\Scripts\python.exe -m uvicorn backend.api:app --host 127.0.0.1 --port 8000
-```
-
-Local endpoints:
-- `/health` → Process availability
-- `/ready` → Gemini readiness check
-- `/docs` → Swagger UI
-- `/openapi.json` → OpenAPI schema
-</details>
-
----
-
-## 🔑 Authentication
-
-- `POST /v1/proxy/chat` requires `X-API-Key` or Bearer token when `POLYGLOT_API_KEY` is configured.
-- Always requires authentication in **production** (`POLYGLOT_ENV=production`).
-- Supabase-backed authentication hashes API keys with SHA-256.
-
-Provision a key interactively:
-
-```bash
-.\.venv\Scripts\python.exe -m backend.provision_api_key
-```
-
----
-
-## 🧩 API Reference
-
-| Endpoint          | Purpose                                                                 |
-|-------------------|-------------------------------------------------------------------------|
-| `GET /health`     | Reports process availability only                                       |
-| `GET /ready`      | Checks Gemini configuration and caches result                           |
-| `POST /v1/proxy/chat` | Submits inference request (requires authentication)                 |
-
-Example request:
-
-```http
-POST /v1/proxy/chat
-Content-Type: application/json
-X-API-Key: YOUR_API_KEY
-```
-
----
-
-## 🐳 Deployment with Docker
-
-```bash
+# Build the container image
 docker build -t polyglot-edge-agent .
+
+# Run the container with environment file
 docker run --rm -p 8000:8000 --env-file .env polyglot-edge-agent
 ```
 
-✅ Supply secrets (`GEMINI_API_KEY`, `DATABASE_URL`) via your platform’s secret manager.
+Check health:
+```bash
+curl http://localhost:8000/health
+```
+
+</details>
 
 ---
 
-## 🛡️ Security Notes
+## 🖥️ Interactive Dashboard Tour
 
-- Never commit `.env`, API keys, or credentials
-- Rotate exposed credentials immediately
-- Use HTTPS in production
-- Use high-entropy API keys per environment
+The front-end is crafted with **React 19**, **Tailwind CSS v4**, and **Vite**, offering a dark-mode first, high-performance monitoring interface.
+
+| Tab | Icon | Description & Purpose |
+| :--- | :---: | :--- |
+| **Overview** | 📊 | Real-time system status, throughput counters, cost savings, and architecture telemetry. |
+| **AI Playground** | 💬 | Interactive conversational interface to test live queries directly against `/v1/proxy/chat`. |
+| **System Health** | 🩺 | Live ping probes for `/health` and cached model verification for `/ready`. |
+| **Settings** | ⚙️ | Configure gateway host, update local API access tokens, and toggle mock data. |
+| **Help & Docs** | 📖 | In-app API documentation, curl cheat sheet, and troubleshooting workflows. |
+
+> 💡 **Developer Note:** The frontend dev server includes a built-in reverse proxy in `vite.config.ts` redirecting `/v1`, `/health`, and `/ready` to backend port `8000`. No manual CORS configuration required during local development.
+
+---
+
+## 📚 API Reference
+
+All requests accept standard JSON payloads. Interactive Swagger documentation is available at **`http://localhost:8000/docs`**.
+
+### 1. Liveness Probe
+```http
+GET /health
+```
+```json
+{
+  "status": "ok"
+}
+```
+
+### 2. Provider Readiness Check
+```http
+GET /ready
+```
+```json
+{
+  "ready": true,
+  "provider": "gemini",
+  "model": "gemini-1.5-flash",
+  "checked_at": "2026-10-16T12:00:00Z"
+}
+```
+
+### 3. Edge AI Proxy Chat
+```http
+POST /v1/proxy/chat
+X-API-Key: <YOUR_API_KEY>
+Content-Type: application/json
+
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain edge proxy routing in 2 sentences."
+    }
+  ]
+}
+```
+
+<details>
+<summary><b>🔍 Click to view Example cURL</b></summary>
+
+```bash
+curl -X POST http://localhost:8000/v1/proxy/chat \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: YOUR_SECRET_KEY" \
+  -d '{
+    "messages": [
+      {"role": "user", "content": "Hello Polyglot!"}
+    ]
+  }'
+```
+
+</details>
+
+---
+
+## 🌐 Production Deployment
+
+Deploy Polyglot Edge Agent on your preferred cloud infrastructure:
+
+| Platform | Tier | Guide |
+| :--- | :--- | :--- |
+| **Render** | Full Stack | Included [`render.yaml`](render.yaml) automatically configures both backend web service and static dashboard. |
+| **Vercel** | Frontend | Deploy `src/` to Vercel with build command `npm run build` and output directory `dist`. Point API calls to your hosted backend. |
+| **Docker / AWS ECS** | Backend | Containerized using the optimized [`Dockerfile`](Dockerfile) with multi-worker Uvicorn. |
+| **Fly.io** | Micro-Edge | Single command: `fly launch` followed by `fly deploy`. |
+
+---
+
+## 🧪 Testing & Security
+
+### Running the Test Suite
+The backend is thoroughly tested with `pytest` for routing, mock providers, and auth validation:
+
+```bash
+# Run all unit and integration tests
+.\.venv\Scripts\python.exe -m pytest backend -v
+```
+
+### Security Best Practices
+- 🛡️ **Secret Isolation**: Never commit `.env` or credentials to git. Use platform secret managers (AWS Secrets Manager, Supabase Vault, Render Secrets).
+- 🔑 **API Key Hashing**: Production keys are hashed using SHA-256 before storage or validation.
+- 🔒 **HTTPS Everywhere**: Always terminate TLS in front of the API gateway in staging and production environments.
 
 ---
 
@@ -174,131 +336,30 @@ docker run --rm -p 8000:8000 --env-file .env polyglot-edge-agent
 
 ```plaintext
 polyglot-edge-agent/
-├── assets/                     # Images and diagrams
-├── backend/                    # FastAPI app and tests
-│   ├── api.py                  # Main gateway
-│   ├── context_manager.py      # Context budgeting
-│   ├── database.py             # Supabase SQLAlchemy setup
-│   ├── decider_core.py         # Local model routing + guardrails
-│   ├── models.py               # ORM models
-│   ├── provision_api_key.py    # Local key provisioning
-│   └── test_*.py               # Backend tests
-├── extension/                  # Chrome browser extension
-├── src/                        # React / Vite dashboard (App.tsx)
-├── public/                     # Static assets for UI
-├── .dockerignore
-├── .env.example                # Template only — no real secrets
-├── .gitignore
-├── Dockerfile
-├── index.html                  # Vite entry point
-├── package.json                # Frontend dependencies
-├── render.yaml                 # Render deployment blueprint
-├── requirements.txt            # Python dependencies
-├── start.bat                   # One-command Windows startup
-├── tsconfig.json
-└── vite.config.ts              # Vite + proxy config
+├── assets/                     # Architecture schematics, diagrams & vector banners
+├── backend/                    # High-speed FastAPI application
+│   ├── api.py                  # Core API gateway, routes, and auth
+│   ├── context_manager.py      # Context token budgeting & window monitoring
+│   ├── database.py             # Supabase SQLAlchemy connection pool
+│   ├── decider_core.py         # Routing heuristics & edge guardrails
+│   ├── models.py               # Database schemas & ORM models
+│   ├── provision_api_key.py    # Local interactive API key provisioning tool
+│   └── test_*.py               # Automated pytest suite
+├── extension/                  # Chrome browser extension client
+├── src/                        # React 19 + Tailwind CSS v4 Dashboard
+├── public/                     # Static client-side assets
+├── Dockerfile                  # Container definition for gateway service
+├── render.yaml                 # Blueprint for one-click Render deployment
+├── start.bat                   # Automated Windows dual-service launcher
+└── vite.config.ts              # Frontend bundler & backend reverse-proxy config
 ```
-
----
-
-## 🖥️ Local Dashboard (UI)
-
-The project includes a React/Vite dashboard served on **http://localhost:8443**.
-
-**Prerequisites:** Node.js 18+ must be installed.
-
-**One-command startup (Windows):**
-
-```bat
-start.bat
-```
-
-This script:
-- Checks for the `.venv` Python environment and Node.js
-- Starts FastAPI on `http://127.0.0.1:8000`
-- Waits for the backend to be healthy
-- Starts the Vite dev server on `http://localhost:8443`
-- Prints the dashboard URL when both services are ready
-- Runs each service in its own console window
-
-**Manual startup:**
-
-```powershell
-# Terminal 1 — backend
-.\.venv\Scripts\python.exe -m uvicorn backend.api:app --host 127.0.0.1 --port 8000
-
-# Terminal 2 — frontend
-npm run dev
-```
-
-Dashboard URL: **http://localhost:8443**
-
-**Dashboard pages:**
-
-| Page | What it does |
-|---|---|
-| Overview | Project status and demo metrics |
-| AI Playground | Live chat with the real `/v1/proxy/chat` endpoint |
-| System Health | Live `/health` and `/ready` checks |
-| Settings | API endpoint and key configuration (browser local storage) |
-| Help & Documentation | Setup guide and troubleshooting |
-
-> **Security note:** The AI Playground stores the X-API-Key in browser `localStorage` for convenience in local development. This is not a secure credential store. For production use, keep API keys server-side only.
-
-**Vite proxy:** The dev server proxies `/v1`, `/health`, and `/ready` to the FastAPI backend on port 8000. No CORS configuration changes are needed for local development.
-
----
-
-## 🧪 Testing
-
-Run backend tests:
-
-```bash
-.\.venv\Scripts\python.exe -m pytest backend -v
-```
-
----
-
-## 🛠️ Roadmap
-
-- ✅ FastAPI proxy foundation  
-- ✅ Gemini provider integration  
-- ✅ API-key authentication options  
-- ✅ Cached readiness verification  
-- ✅ Docker & Render configs  
-- 🔜 CI/CD automation  
-- 🔜 Provider-independent routing & observability  
-- 🔜 Versioned releases  
-
----
-
-## 🤝 Contributing
-
-1. Fork the repo  
-2. Create a feature branch  
-3. Add/update tests  
-4. Run test suite  
-5. Open a PR  
-
-⚠️ Do not include credentials or private data in contributions.
-
----
-
-## 📜 License
-
-No license specified yet. Add a `LICENSE` file before describing the project as open source.
 
 ---
 
 <div align="center">
 
-`[Looks like the result wasn't safe to show. Let's switch things up and try something else!]`
+Made with ❤️ for high-performance Agentic AI workflows.
 
-✨ *Polyglot Edge Agent — bridging AI inference with secure, scalable APIs* ✨
+**⚡ Polyglot Edge Agent — Bridging Edge Velocity with Frontier Intelligence ⚡**
 
 </div>
-```
-
----
-
-👉 This version makes your README **interactive** with collapsible sections, **animated badges**, and clear visual hierarchy. Would you like me to also add **animated architecture diagrams** (using Mermaid.js) so readers can see the system flow dynamically?

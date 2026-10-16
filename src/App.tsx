@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-type Page = "Overview" | "AI Playground" | "Request Explorer" | "Model Routing" | "Analytics" | "API Keys" | "Settings" | "System Health" | "Help & Documentation";
+type Page = "Overview" | "AI Playground" | "Request Explorer" | "Model Routing" | "Analytics" | "API Keys" | "Settings" | "System Health" | "Help & Documentation" | "Login";
 type IconName = "grid" | "spark" | "search" | "route" | "chart" | "key" | "settings" | "health" | "help" | "bell" | "sun" | "chevron" | "copy" | "send" | "check" | "clock" | "menu" | "plus" | "x" | "refresh";
 
 const icons: Record<IconName, React.ReactNode> = {

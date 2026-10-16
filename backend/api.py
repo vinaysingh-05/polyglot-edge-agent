@@ -32,6 +32,9 @@ try:
     from .database import get_optional_db
     from .decider_core import PolyglotCore
     from .models import ApiKey
+
+class LoginRequest(BaseModel):
+    api_key: str = Field(..., min_length=1)
 except ImportError:  # Supports running from the backend directory.
     from context_manager import ContextItem, ContextManager
     from database import get_optional_db
@@ -259,6 +262,31 @@ async def health() -> dict[str, str]:
     """Report API process availability without claiming inference readiness."""
     return {"status": "ok", "service": "polyglot-proxy", "inference": "not_verified"}
 
+
+@app.get("/ready")
+async def readiness() -> JSONResponse:
+    # existing implementation unchanged (will be kept below)
+    ...
+
+
+@app.post("/login")
+async def login(request: LoginRequest) -> dict:
+    """Simple API-key based login for the dashboard.
+    Returns 200 if the provided key matches the server's configured API key.
+    """
+    # Prefer the explicit API_KEY env var if set; otherwise fall back to Gemini key.
+    expected = API_KEY or GEMINI_API_KEY
+    if not expected:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Authentication is not configured on the server.",
+        )
+    if request.api_key != expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API key.",
+        )
+    return {"status": "ok", "message": "Authenticated"}
 
 @app.get("/ready")
 async def readiness() -> JSONResponse:
