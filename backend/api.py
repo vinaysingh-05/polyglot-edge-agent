@@ -537,6 +537,100 @@ async def proxy_chat(
     }
 
 
+
+# ---------------------------------------------------------------------------
+# Playground endpoint — uses the caller-supplied Gemini API key directly.
+# No local decision engine or server-side credentials required.
+# ---------------------------------------------------------------------------
+
+class PlaygroundRequest(BaseModel):
+    prompt: str = Field(..., min_length=1, max_length=MAX_PROMPT_CHARS)
+    gemini_api_key: str = Field(..., min_length=10)
+
+
+_PLAYGROUND_MODELS = [
+    "gemini-flash-lite-latest",
+    "gemini-flash-latest",
+    "gemini-2.5-flash-lite",
+    "gemini-3.7-flash",
+    "gemini-2.5-flash",
+    "gemini-2.0-flash",
+]
+
+
+async def _invoke_gemini_byok(model_id: str, prompt: str, api_key: str) -> str:
+    """Call Gemini using the caller's own API key (BYOK). Returns generated text."""
+    body = json.dumps({
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"maxOutputTokens": 2048},
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        f"{GEMINI_API_URL}/{model_id}:generateContent?key={api_key}",
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    def send() -> dict[str, Any]:
+        with urllib.request.urlopen(req, timeout=INFERENCE_TIMEOUT_SECONDS) as r:
+            return json.loads(r.read())
+
+    payload = await asyncio.to_thread(send)
+    return _extract_gemini_text(payload)
+
+
+@app.post("/v1/playground/chat")
+async def playground_chat(request: PlaygroundRequest) -> dict[str, Any]:
+    """
+    Playground-only inference using the caller-supplied Gemini API key.
+    Tries models in order, skipping unavailable or overloaded ones.
+    """
+    t0 = time.monotonic()
+    last_err = "No models available."
+
+    for model in _PLAYGROUND_MODELS:
+        try:
+            text = await asyncio.wait_for(
+                _invoke_gemini_byok(model, request.prompt, request.gemini_api_key),
+                timeout=INFERENCE_TIMEOUT_SECONDS,
+            )
+            return {
+                "status": "success",
+                "response": text,
+                "model": model,
+                "latency_ms": int((time.monotonic() - t0) * 1000),
+            }
+        except asyncio.TimeoutError:
+            last_err = f"Model {model} timed out."
+        except urllib.error.HTTPError as exc:
+            body_text = ""
+            try:
+                body_text = exc.read().decode()
+            except Exception:
+                pass
+            err_json: dict = {}
+            try:
+                err_json = json.loads(body_text)
+            except Exception:
+                pass
+            msg = err_json.get("error", {}).get("message", body_text or str(exc))
+            # 400 with invalid-key message → stop immediately, no point trying others
+            if exc.code == 400:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg)
+            # 404 = model not found, 503 = overloaded → try next model
+            if exc.code in {404, 503}:
+                last_err = msg
+                continue
+            raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=msg)
+        except Exception as exc:
+            last_err = str(exc)
+
+    raise HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail=f"All Gemini models are currently unavailable. Last error: {last_err}",
+    )
+
+
 if __name__ == "__main__":
     import uvicorn
 
